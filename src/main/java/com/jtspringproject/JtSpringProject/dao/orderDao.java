@@ -36,4 +36,13 @@ public class orderDao {
                 .setParameter("customerId", customerId)
                 .list();
     }
+
+    @Transactional
+public boolean existsByPaymentIntentId(String paymentIntentId) {
+    Long count = this.sessionFactory.getCurrentSession()
+            .createQuery("select count(o) from ORDERS o where o.paymentIntentId = :id", Long.class)
+            .setParameter("id", paymentIntentId)
+            .uniqueResult();
+    return count != null && count > 0;
+}
 }
