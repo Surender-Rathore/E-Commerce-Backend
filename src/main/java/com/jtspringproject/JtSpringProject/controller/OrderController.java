@@ -35,22 +35,27 @@ public class OrderController {
 
     @PostMapping("/api/orders/place")
     @ResponseBody
-    public ResponseEntity<Order> placeOrder(@RequestParam("firstName") String firstName,
-                                             @RequestParam("lastName") String lastName,
-                                             @RequestParam("address") String address,
-                                             @RequestParam("city") String city,
-                                             @RequestParam("phoneNumber") String phoneNumber,
-                                             @RequestParam("paymentMethod") String paymentMethod) {
-        User customer = getCurrentUser();
-        Order order = orderService.placeOrder(customer, firstName, lastName, address, city, phoneNumber, paymentMethod);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<?> placeOrder(@RequestParam("firstName") String firstName,
+                                         @RequestParam("lastName") String lastName,
+                                         @RequestParam("address") String address,
+                                         @RequestParam("city") String city,
+                                         @RequestParam("phoneNumber") String phoneNumber,
+                                         @RequestParam("paymentMethod") String paymentMethod,
+                                         @RequestParam(value = "paymentIntentId", required = false) String paymentIntentId) {
+        try {
+            User customer = getCurrentUser();
+            Order order = orderService.placeOrder(customer, firstName, lastName, address, city,
+                    phoneNumber, paymentMethod, paymentIntentId);
+            return ResponseEntity.ok(order);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/api/orders")
     @ResponseBody
     public ResponseEntity<List<Order>> getMyOrders() {
         User customer = getCurrentUser();
-        List<Order> orders = orderService.getOrdersByCustomer(customer.getId());
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderService.getOrdersByCustomer(customer.getId()));
     }
 }

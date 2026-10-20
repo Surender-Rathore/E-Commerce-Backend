@@ -41,6 +41,9 @@ public class Order {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Column(name = "payment_intent_id")
+private String paymentIntentId;
+
     @Column(name = "total_price")
     private int totalPrice;
 
@@ -84,4 +87,7 @@ public class Order {
 
     public Date getOrderDate() { return orderDate; }
     public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
+
+    public String getPaymentIntentId() { return paymentIntentId; }
+public void setPaymentIntentId(String paymentIntentId) { this.paymentIntentId = paymentIntentId; }
 }
